@@ -23,17 +23,15 @@ update {
 }
 
 split { 
-	if (old.levelID == 19 && current.levelID == 19) { 
+	if (old.levelID == 19 && current.levelID == 19)
 		return current.bossStage == 3 && old.bossStage < 3;
-	}
+	
 	
 	if (Array.IndexOf(vars.bossStages, current.levelID) > -1)
-	{
 		return old.levelID == current.levelID && old.levelEnd == 0 && current.levelEnd == 1;
-	}
 
+		
 	var ent = memory.ReadValue<int>(modules.First().BaseAddress + 0x234A5C);
-	
 	while (ent > 0) {
 	
 		if (memory.ReadValue<int>(new IntPtr(ent + 0x68)) == 94) { 
@@ -44,7 +42,7 @@ split {
 				return animating == 1;
 			}
 		}
-		
+
 		ent = memory.ReadValue<int>(new IntPtr(ent));
 	}
 }
