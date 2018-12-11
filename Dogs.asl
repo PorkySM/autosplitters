@@ -14,7 +14,7 @@ init {
 }
 
 start {
-	return current.state != 0 && old.state == 0 && current.levelID == 0;
+	return current.state == 2 && old.state == 18 && current.levelID == 0; 
 }
 
 update {
