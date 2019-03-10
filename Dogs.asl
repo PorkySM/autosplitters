@@ -47,6 +47,7 @@ split {
 	}
 }
 
-reset {
-	return current.levelID == -1;
-}  
+// Temporary
+//reset {
+//	return current.levelID == -1;
+//}  
