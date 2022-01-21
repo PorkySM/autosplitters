@@ -1,9 +1,15 @@
-// This is super messy.. I'm sorry :(
-state("Pcdogs") {
+state("Pcdogs", "EN") {
 	byte state : 0x9D288;
 	int levelEnd : 0x168A760;
 	int levelID : 0x168ADB0;
 	int bossStage : 0x0168ADA0, 0x18, 0x70;
+}
+
+state("Pcdogs", "SC") {
+	byte state : 0x9F840;
+	int levelEnd : 0x168D120;
+	int levelID : 0x168D770;
+	int bossStage : 0x168D760, 0x18, 0x70;
 }
 
 startup {
@@ -31,6 +37,10 @@ startup {
 
 	vars.bossStages = new int[] {4, 9, 14}; 
 	
+	settings.Add("game_version", true, "Game Version (requires LiveSplit restart)");
+	settings.Add("game_version_en", true, "English", "game_version");
+	settings.Add("game_version_sc", false, "Scandinavian", "game_version");
+	
 	settings.Add("reset_levelselect", false, "Auto-Reset in Level Select Menu"); 
 
 	foreach (string level in vars.levelNames)
@@ -38,6 +48,16 @@ startup {
 }
 
 init {  
+
+	// TODO: Replace with a mapping
+	if (settings["game_version_en"]) {
+		version = "EN";
+		vars.firstEntityOffset = 0x234A5C;
+	} else if (settings["game_version_sc"]) {
+		version = "SC";
+		vars.firstEntityOffset = 0x23741C;
+	}
+	
 	vars.shouldPortalSplit = false;
 	vars.lastLevel = -1;
 }
@@ -61,7 +81,7 @@ split {
 	if (Array.IndexOf(vars.bossStages, current.levelID) > -1)
 		return old.levelID == current.levelID && old.levelEnd == 0 && current.levelEnd == 1;
 
-	var ent = memory.ReadValue<int>(modules.First().BaseAddress + 0x234A5C);
+	var ent = memory.ReadValue<int>(modules.First().BaseAddress + (int)vars.firstEntityOffset);
 	while (ent > 0) {
 		if (memory.ReadValue<int>(new IntPtr(ent + 0x68)) == 94) { 
 			var animating = memory.ReadValue<int>(new IntPtr(ent + 0x174));
@@ -82,4 +102,3 @@ reset {
 	vars.lastLevel >= 0 && vars.lastLevel < vars.levelNames.Length &&
 	settings["reset_" + vars.levelNames[vars.lastLevel]] && current.levelID == -1;
 }  
- 
