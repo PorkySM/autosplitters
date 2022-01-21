@@ -9,7 +9,7 @@ state("Pcdogs", "SC") {
 	byte state : 0x9F840;
 	int levelEnd : 0x168D120;
 	int levelID : 0x168D770;
-	int bossStage : 0x168D760, 0x18, 0x70;
+	int bossStage : 0x168D760, 0x1C, 0x70;
 }
 
 startup {
@@ -102,3 +102,4 @@ reset {
 	vars.lastLevel >= 0 && vars.lastLevel < vars.levelNames.Length &&
 	settings["reset_" + vars.levelNames[vars.lastLevel]] && current.levelID == -1;
 }  
+ 
